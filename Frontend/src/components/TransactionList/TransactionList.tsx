@@ -38,7 +38,7 @@ const TransactionList: React.FC = () => {
     `;
     try {
       const response = await graphqlClient(query);
-      const transactionsData = response?.data?.transactions || [];
+      const transactionsData = response?.data?.transactions ?? [];
       setTransactions(transactionsData);
     } catch (err) {
       setError("Nie udało się pobrać transakcji." + err);
@@ -181,7 +181,7 @@ const TransactionList: React.FC = () => {
                   <>
                     <input
                       type="number"
-                      value={editValues.amount || ""}
+                      value={editValues.amount ?? ""}
                       onChange={(e) => handleEditChange(e, "amount")}
                     />
                     {editErrors.amount && (
@@ -196,7 +196,7 @@ const TransactionList: React.FC = () => {
                 {editingTransactionId === transaction.id ? (
                   <>
                     <select
-                      value={editValues.type || ""}
+                      value={editValues.type ?? ""}
                       onChange={(e) => handleEditChange(e, "type")}
                     >
                       <option value="">-- wybierz --</option>
@@ -218,7 +218,7 @@ const TransactionList: React.FC = () => {
                   <>
                     <input
                       type="text"
-                      value={editValues.tags || ""}
+                      value={editValues.tags ?? ""}
                       onChange={(e) => handleEditChange(e, "tags")}
                     />
                     {editErrors.tags && (
@@ -234,7 +234,7 @@ const TransactionList: React.FC = () => {
                   <>
                     <input
                       type="text"
-                      value={editValues.notes || ""}
+                      value={editValues.notes ?? ""}
                       onChange={(e) => handleEditChange(e, "notes")}
                     />
                     {editErrors.notes && (

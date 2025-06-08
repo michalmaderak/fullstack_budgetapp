@@ -14,6 +14,7 @@ import com.example.pasir_maderak_michal.service.TransactionService;
 
 @Controller
 public class DebtGraphQLController {
+
     private final DebtService debtService;
     private final TransactionService transactionService;
 
@@ -25,10 +26,11 @@ public class DebtGraphQLController {
     @QueryMapping
     public List<Debt> groupDebts(@Argument Long groupId) {
         return debtService.getGroupDebts(groupId).stream()
-                .peek(debt -> {
+                .map(debt -> {
                     if (debt.getTitle() == null) {
                         debt.setTitle("Brak opisu");
                     }
+                    return debt;
                 })
                 .toList();
     }

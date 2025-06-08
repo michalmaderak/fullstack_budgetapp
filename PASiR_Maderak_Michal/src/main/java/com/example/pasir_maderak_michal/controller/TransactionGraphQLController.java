@@ -5,13 +5,11 @@ import com.example.pasir_maderak_michal.dto.TransactionDTO;
 import com.example.pasir_maderak_michal.model.Transaction;
 import com.example.pasir_maderak_michal.model.User;
 import com.example.pasir_maderak_michal.service.TransactionService;
-import com.example.pasir_maderak_michal.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-
 
 import java.util.List;
 
@@ -19,11 +17,9 @@ import java.util.List;
 public class TransactionGraphQLController {
 
     private final TransactionService transactionService;
-    private final UserService userService;
 
-    public TransactionGraphQLController(TransactionService transactionService, UserService userService) {
+    public TransactionGraphQLController(TransactionService transactionService) {
         this.transactionService = transactionService;
-        this.userService = userService;
     }
 
     @QueryMapping
@@ -43,13 +39,15 @@ public class TransactionGraphQLController {
     ) {
         return transactionService.updateTransaction(id, transactionDTO);
     }
+
     @MutationMapping
     public Transaction deleteTransaction(@Argument Long id) {
         return transactionService.deleteTransaction(id);
     }
+
     @QueryMapping
     public BalanceDto userBalance(@Argument Float days) {
         User user = transactionService.getCurrentUser();
-        return transactionService.getUserBalance(user, days); // Pass `days` to service
+        return transactionService.getUserBalance(user, days);
     }
 }

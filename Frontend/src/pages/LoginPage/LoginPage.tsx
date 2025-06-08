@@ -1,4 +1,5 @@
 // src/pages/LoginPage/LoginPage.tsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../../api/authApi";
@@ -9,6 +10,7 @@ import { useAuth } from "../../context/useAuth";
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -16,17 +18,13 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
     try {
       const response = await authApi.login({ email, password });
       login(response.data.token);
       navigate("/transactions");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (error.response && error.response.data) {
-        setError(error.response.data); // wiadomość z backendu
-      } else {
-        setError("Wystąpił nieznany błąd podczas logowania.");
-      }
+      setError(error?.response?.data ?? "Wystąpił nieznany błąd podczas logowania.");
     }
   };
 
@@ -45,6 +43,7 @@ const LoginPage: React.FC = () => {
           />
           {error && <ErrorMessage message={error} />}
         </div>
+
         <div className={styles.formGroup}>
           <label>Hasło:</label>
           <input
@@ -55,6 +54,7 @@ const LoginPage: React.FC = () => {
             className={styles.input}
           />
         </div>
+
         <button type="submit" className={styles.button}>
           Zaloguj
         </button>

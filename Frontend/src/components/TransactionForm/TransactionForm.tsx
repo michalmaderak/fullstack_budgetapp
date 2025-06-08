@@ -15,6 +15,7 @@ interface FormData {
 
 const TransactionForm: React.FC = () => {
   const { refreshBalance } = useBalance();
+
   const {
     register,
     handleSubmit,
@@ -23,17 +24,16 @@ const TransactionForm: React.FC = () => {
 
   const onSubmit = async (data: FormData) => {
     const mutation = `
-    mutation AddTransaction($transactionDTO: TransactionInput!) {
-      addTransaction(transactionDTO: $transactionDTO) {
-        id
+      mutation AddTransaction($transactionDTO: TransactionInput!) {
+        addTransaction(transactionDTO: $transactionDTO) {
+          id
+        }
       }
-    }
-  `;
+    `;
 
     try {
       await graphqlClient(mutation, { transactionDTO: data });
       refreshBalance(null);
-
       toast.success("✅ Transakcja dodana!");
     } catch (error) {
       toast.error((error as Error).message);
@@ -41,15 +41,13 @@ const TransactionForm: React.FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className={styles["transaction-form"]}
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className={styles["transaction-form"]}>
       <h2>Dodaj Transakcję</h2>
 
       <div className={styles.formGroup}>
-        <label>Kwota:</label>
+        <label htmlFor="amount">Kwota:</label>
         <input
+          id="amount"
           type="number"
           step="0.01"
           placeholder="Kwota"
@@ -63,20 +61,17 @@ const TransactionForm: React.FC = () => {
           })}
           className={styles.input}
         />
-        {errors.amount && (
-          <p className={styles.error}>{errors.amount.message}</p>
-        )}
+        {errors.amount && <p className={styles.error}>{errors.amount.message}</p>}
       </div>
 
       <div className={styles.formGroup}>
-        <label>Typ:</label>
+        <label htmlFor="type">Typ:</label>
         <select
+          id="type"
           {...register("type", {
             required: "Typ transakcji jest wymagany",
             validate: (val) =>
-              val === "INCOME" ||
-              val === "EXPENSE" ||
-              "Nieprawidłowy typ transakcji",
+              val === "INCOME" || val === "EXPENSE" || "Nieprawidłowy typ transakcji",
           })}
           className={styles.input}
         >
@@ -88,8 +83,9 @@ const TransactionForm: React.FC = () => {
       </div>
 
       <div className={styles.formGroup}>
-        <label>Tagi:</label>
+        <label htmlFor="tags">Tagi:</label>
         <input
+          id="tags"
           type="text"
           {...register("tags", {
             required: "Tagi są wymagane",
@@ -109,8 +105,9 @@ const TransactionForm: React.FC = () => {
       </div>
 
       <div className={styles.formGroup}>
-        <label>Notatki:</label>
+        <label htmlFor="notes">Notatki:</label>
         <textarea
+          id="notes"
           {...register("notes", {
             maxLength: {
               value: 200,

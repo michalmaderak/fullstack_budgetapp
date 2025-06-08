@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from "react";
 import graphqlClient from "../../api/graphClient";
 import { BalanceContext } from "./BalanceContext";
-
+import { useMemo } from 'react';
 interface Balance {
   totalIncome: number;
   totalExpense: number;
@@ -32,9 +32,11 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  return (
-    <BalanceContext.Provider value={{ balance, refreshBalance }}>
-      {children}
-    </BalanceContext.Provider>
-  );
+  const value = useMemo(() => ({ balance, refreshBalance }), [balance, refreshBalance]);
+
+return (
+  <BalanceContext.Provider value={value}>
+    {children}
+  </BalanceContext.Provider>
+);
 };

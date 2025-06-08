@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 /* src/pages/GroupMembersPage/GroupMembersPage.tsx */
+
 import React, { useEffect, useState } from "react";
 import { groupsApi } from "../../api/groupsApi";
 import { useAuth } from "../../context/useAuth";
@@ -46,6 +48,7 @@ const GroupMembersPage: React.FC<Props> = ({ group, onBack }) => {
   const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { refreshBalance } = useBalance();
+
   useEffect(() => {
     fetchMembers();
   }, [group]);
@@ -64,7 +67,7 @@ const GroupMembersPage: React.FC<Props> = ({ group, onBack }) => {
       fetchMembers();
     } catch (error: any) {
       console.error("Błąd dodawania członka:", error);
-      alert(error.message || "Wystąpił błąd.");
+      alert(error.message ?? "Wystąpił błąd.");
     }
   };
 
@@ -77,7 +80,6 @@ const GroupMembersPage: React.FC<Props> = ({ group, onBack }) => {
     try {
       await groupsApi.deleteDebt(debtId);
       toast.success("Dług usunięty!");
-      // Odśwież listę długów:
       fetchMembers();
     } catch (error) {
       toast.error("Błąd usuwania długu.");
@@ -87,13 +89,13 @@ const GroupMembersPage: React.FC<Props> = ({ group, onBack }) => {
 
   const handleMarkAsPaid = async (debtId: number) => {
     await groupsApi.markDebtAsPaid(debtId);
-    fetchMembers(); // odśwież dane
+    fetchMembers();
   };
 
   const handleConfirmPayment = async (debtId: number) => {
     await groupsApi.confirmDebtPayment(debtId);
     refreshBalance(null);
-    fetchMembers(); // odśwież dane
+    fetchMembers();
   };
 
   return (
@@ -101,6 +103,7 @@ const GroupMembersPage: React.FC<Props> = ({ group, onBack }) => {
       <button onClick={onBack} className={styles.backButton}>
         Wróć do grup
       </button>
+
       <h2>Członkowie grupy: {group.name}</h2>
 
       <div className={styles.form}>
@@ -118,20 +121,16 @@ const GroupMembersPage: React.FC<Props> = ({ group, onBack }) => {
         </button>
       </div>
 
-      <AddGroupTransaction
-        groupId={group.id}
-        onTransactionAdded={fetchMembers}
-      />
+      <AddGroupTransaction groupId={group.id} onTransactionAdded={fetchMembers} />
+
       <ul className={styles.memberList}>
         {members.map((member) => (
           <li key={member.id}>
             {member.userEmail}
             {member.userId === group.ownerId && (
-              <>
-                <span className={styles.adminLabel}>(admin)</span>
-              </>
+              <span className={styles.adminLabel}>(admin)</span>
             )}
-            {user?.id == group.ownerId && member.userId !== group.ownerId && (
+            {user?.id === group.ownerId && member.userId !== group.ownerId && (
               <button
                 onClick={() => {
                   setSelectedMemberId(member.id);
@@ -144,6 +143,7 @@ const GroupMembersPage: React.FC<Props> = ({ group, onBack }) => {
           </li>
         ))}
       </ul>
+
       {debts.length > 0 && (
         <div className={styles.debtsSection}>
           <h3>Długi w grupie:</h3>

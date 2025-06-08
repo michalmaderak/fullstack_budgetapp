@@ -1,4 +1,5 @@
 // src/pages/RegisterPage/RegisterPage.tsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../../api/authApi";
@@ -7,6 +8,7 @@ import styles from "./RegisterPage.module.scss";
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -52,18 +54,12 @@ const RegisterPage: React.FC = () => {
       await authApi.register({ username, email, password });
       alert("Rejestracja udana. Możesz się teraz zalogować.");
       navigate("/login");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      // Obsługa błędów z backendu
-      if (error.response && error.response.data) {
-        setErrors(
-          error.response.data.errors || {
-            general: "Błąd rejestracji. Spróbuj ponownie.",
-          }
-        );
-      } else {
-        setErrors({ general: "Błąd rejestracji. Spróbuj ponownie." });
-      }
+      setErrors(
+        error?.response?.data?.errors ?? {
+          general: "Błąd rejestracji. Spróbuj ponownie.",
+        }
+      );
     }
   };
 
@@ -82,6 +78,7 @@ const RegisterPage: React.FC = () => {
           />
           {errors.username && <ErrorMessage message={errors.username} />}
         </div>
+
         <div className={styles.formGroup}>
           <label>Email:</label>
           <input
@@ -93,6 +90,7 @@ const RegisterPage: React.FC = () => {
           />
           {errors.email && <ErrorMessage message={errors.email} />}
         </div>
+
         <div className={styles.formGroup}>
           <label>Hasło:</label>
           <input
@@ -104,6 +102,7 @@ const RegisterPage: React.FC = () => {
           />
           {errors.password && <ErrorMessage message={errors.password} />}
         </div>
+
         <div className={styles.formGroup}>
           <label>Powtórz hasło:</label>
           <input
@@ -117,7 +116,9 @@ const RegisterPage: React.FC = () => {
             <ErrorMessage message={errors.confirmPassword} />
           )}
         </div>
+
         {errors.general && <ErrorMessage message={errors.general} />}
+
         <button type="submit" className={styles.button}>
           Zarejestruj
         </button>
